@@ -38,7 +38,7 @@
 
     - name: Add user to the docker group
       user:
-        name: azureuser
+        name: user_stage
         groups: docker
         append: yes
 
