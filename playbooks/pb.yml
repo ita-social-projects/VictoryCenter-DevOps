@@ -2,13 +2,12 @@
 - name: Example Playbook for Github Action Runner install
   hosts: all
   vars:
-    #may contain sensitive data (registration token)
-    #hide_sensitive_logs: true
+   
     runner_dir: "/home/.."
     runner_user: ""
     github_account: ""
     github_repo: ""
- #   runner_action: "install,configure"
+
     runner_version: "latest"
 
     runner_config_labels: "Stage, self-hosted-vm"
