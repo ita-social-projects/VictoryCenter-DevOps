@@ -1,0 +1,34 @@
+---
+- name: Install Monitoring Stack (Grafana + Prometheus + cAdvisor)
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+
+  vars:
+    monitoring_root: /opt/monitoring
+    docker_compose_file: "{{ monitoring_root }}/docker-compose-monitoring.yml"
+    prometheus_config_path: "{{ monitoring_root }}/prometheus.yml"
+
+  tasks:
+    - name: Ensure monitoring directory exists
+      file:
+        path: "{{ monitoring_root }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy docker-compose file for monitoring
+      template:
+        src: docker-compose-monitoring.yml.j2
+        dest: "{{ docker_compose_file }}"
+        mode: '0644'
+
+    - name: Copy Prometheus config file
+      template:
+        src: prometheus.yml.j2
+        dest: "{{ prometheus_config_path }}"
+        mode: '0644'
+
+    - name: Start monitoring stack
+      shell: docker-compose -f "{{ docker_compose_file }}" up -d
+      args:
+        chdir: "{{ monitoring_root }}"
