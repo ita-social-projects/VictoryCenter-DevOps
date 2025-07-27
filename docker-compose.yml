@@ -5,8 +5,8 @@ services:
     image: certbot/certbot:latest
     container_name: certbot
     volumes:
-      - ./certbot/www:/var/www/certbot/:rw
-      - ./certbot/conf:/etc/letsencrypt/:rw
+      - ~/certbot/www:/var/www/certbot/:rw
+      - ~/certbot/conf:/etc/letsencrypt/:rw
   nginx:
     restart: always
     image: nginx:latest
@@ -16,8 +16,8 @@ services:
       - "443:443"
     volumes:
       - ./templates:/etc/nginx/templates
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf:/etc/nginx/ssl/:ro
+      - ~/certbot/www:/var/www/certbot/:ro
+      - ~/certbot/conf:/etc/nginx/ssl/:ro
   frontend:
     restart: always
     image: victorycenterua/client:release-${DOCKER_TAG_FRONTEND}
