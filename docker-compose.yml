@@ -32,6 +32,8 @@ services:
     image: victorycenterua/backend:release-${DOCKER_TAG_BACKEND}
     container_name: backend
     pull_policy: always
+    volumes:
+      - /mnt/static:/app/VictoryCenter/VictoryCenter.WebAPI/StaticFile
     expose:
       - "80:8080"
     extra_hosts:
@@ -42,6 +44,12 @@ services:
       INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD}
       JWTOPTIONS_SECRETKEY: ${JWTOPTIONS_SECRETKEY}
       JWTOPTIONS_REFRESH_TOKEN_SECRETKEY: ${JWTOPTIONS_REFRESH_TOKEN_SECRETKEY}
+      BLOB_LOCAL_STORE_KEY: ${BLOB_LOCAL_STORE_KEY}
+      WAY4PAY_MERCHANT_LOGIN: ${WAY4PAY_MERCHANT_LOGIN}
+      WAY4PAY_MERCHANT_SECRET_KEY: ${WAY4PAY_MERCHANT_SECRET_KEY}
+      WAY4PAY_MERCHANT_DOMAIN_NAME: ${WAY4PAY_MERCHANT_DOMAIN_NAME}
+      WAY4PAY_API_URL: ${WAY4PAY_API_URL}
+    
 volumes:
   backend:
 networks:
