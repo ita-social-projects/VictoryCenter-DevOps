@@ -33,7 +33,7 @@ services:
     container_name: backend
     pull_policy: always
     volumes:
-      - /mnt/static:/app/StaticFile
+      - /mnt/static:/app/wwwroot
     expose:
       - "80:8080"
     extra_hosts:
