@@ -1,3 +1,6 @@
+# -------------------------------
+# HTTP → HTTPS + ACME (Let’s Encrypt)
+# -------------------------------
 server {
     listen 80;
     listen [::]:80;
@@ -5,16 +8,16 @@ server {
     server_name historycode.online;
     server_tokens off;
 
+    # ACME challenge
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
 
-
+    # Redirect to HTTPS
     location / {
-    return 301 https://historycode.online$request_uri;
+        return 301 https://historycode.online$request_uri;
     }
 }
-
 
 server {
     listen 80;
@@ -23,55 +26,92 @@ server {
     server_name backend.historycode.online;
     server_tokens off;
 
+    # ACME challenge
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
 
-
+    # Redirect to HTTPS
     location / {
-    return 301 https://backend.historycode.online$request_uri;
+        return 301 https://backend.historycode.online$request_uri;
     }
 }
 
-
+# -------------------------------
+# HTTPS: Frontend (SPA)
+# -------------------------------
 server {
     listen 443 ssl http2;
-    server_name historycode.online;
+    listen [::]:443 ssl http2;
 
-    ssl_certificate /etc/nginx/ssl/live/historycode.online/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/live/historycode.online/privkey.pem;
+    server_name historycode.online;
+    server_tokens off;
+
+    ssl_certificate         /etc/nginx/ssl/live/historycode.online/fullchain.pem;
+    ssl_certificate_key     /etc/nginx/ssl/live/historycode.online/privkey.pem;
     ssl_trusted_certificate /etc/nginx/ssl/live/historycode.online/fullchain.pem;
 
     client_max_body_size 50M;
 
+    # (опційно) базові h1 заголовки безпеки
+    add_header X-Frame-Options DENY always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+
     location / {
         proxy_pass http://frontend;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
+        proxy_set_header Host                 $http_host;
+        proxy_set_header X-Real-IP            $remote_addr;
+        proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto    $scheme;
     }
 }
 
-
+# -------------------------------
+# HTTPS: Backend + Swagger
+# -------------------------------
 server {
     listen 443 ssl http2;
+    listen [::]:443 ssl http2;
 
     server_name backend.historycode.online;
+    server_tokens off;
 
-    ssl_certificate /etc/nginx/ssl/live/backend.historycode.online/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/live/backend.historycode.online/privkey.pem;
+    ssl_certificate         /etc/nginx/ssl/live/backend.historycode.online/fullchain.pem;
+    ssl_certificate_key     /etc/nginx/ssl/live/backend.historycode.online/privkey.pem;
     ssl_trusted_certificate /etc/nginx/ssl/live/backend.historycode.online/fullchain.pem;
 
     client_max_body_size 50M;
 
-    location / {
-        proxy_pass http://backend:8080;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+    # --- Swagger UI (публічно)
+    # (якщо потрібно обмежити доступ — раскоментуй 2 рядки нижче і додай .htpasswd)
+    # auth_basic           "Restricted";
+    # auth_basic_user_file /etc/nginx/ssl/.htpasswd;
 
+    location /swagger/ {
+        proxy_pass http://backend:8080/exmoor/;
+        proxy_set_header Host                 $http_host;
+        proxy_set_header X-Real-IP            $remote_addr;
+        proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto    $scheme;
+        expires 10m;
+    }
+
+    # Swagger JSON (прямий шлях)
+    location = /swagger/v1/swagger.json {
+        proxy_pass http://backend:8080/exmoor/v1/swagger.json;
+        proxy_set_header Host                 $http_host;
+        proxy_set_header X-Real-IP            $remote_addr;
+        proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto    $scheme;
+    }
+
+    # Основні API-запити
+    location / {
+        proxy_pass http://backend:8080/;
+        proxy_set_header Host                 $http_host;
+        proxy_set_header X-Real-IP            $remote_addr;
+        proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto    $scheme;
     }
 }
