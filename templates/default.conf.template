@@ -99,7 +99,7 @@ server {
 
     # Swagger JSON (прямий шлях)
     location = /swagger/v1/swagger.json {
-        proxy_pass http://backend:80/swagger/v1/swagger.json;
+        proxy_pass http://backend:8080/swagger/v1/swagger.json;
         proxy_set_header Host                 $http_host;
         proxy_set_header X-Real-IP            $remote_addr;
         proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
