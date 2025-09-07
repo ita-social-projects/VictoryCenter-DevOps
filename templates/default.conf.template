@@ -89,7 +89,7 @@ server {
     # auth_basic_user_file /etc/nginx/ssl/.htpasswd;
 
     location /swagger/ {
-        proxy_pass http://backend:80/swagger/;
+        proxy_pass http://backend:8080/swagger/;
         proxy_set_header Host                 $http_host;
         proxy_set_header X-Real-IP            $remote_addr;
         proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
@@ -99,7 +99,7 @@ server {
 
     # Swagger JSON (прямий шлях)
     location = /swagger/v1/swagger.json {
-        proxy_pass http://backend:80/swagger/v1/swagger.json;
+        proxy_pass http://backend:8080/swagger/v1/swagger.json;
         proxy_set_header Host                 $http_host;
         proxy_set_header X-Real-IP            $remote_addr;
         proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
@@ -108,7 +108,7 @@ server {
 
     # Основні API-запити
     location / {
-        proxy_pass http://backend:80/;
+        proxy_pass http://backend:8080/;
         proxy_set_header Host                 $http_host;
         proxy_set_header X-Real-IP            $remote_addr;
         proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
