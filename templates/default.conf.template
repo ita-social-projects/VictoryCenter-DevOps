@@ -78,7 +78,7 @@ server {
     server_tokens off;
 
     ssl_certificate         /etc/letsencrypt/live/backend.historycode.online/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/backend.historycode.online/privkey.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/backend.historycode.online/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/backend.historycode.online/fullchain.pem;
 
     client_max_body_size 50M;
