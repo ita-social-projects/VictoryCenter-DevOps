@@ -47,9 +47,9 @@ server {
     server_name historycode.online;
     server_tokens off;
 
-    ssl_certificate         /etc/nginx/ssl/live/historycode.online/fullchain.pem;
-    ssl_certificate_key     /etc/nginx/ssl/live/historycode.online/privkey.pem;
-    ssl_trusted_certificate /etc/nginx/ssl/live/historycode.online/fullchain.pem;
+    ssl_certificate         /etc/letsencrypt/live/historycode.online/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/historycode.online/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/historycode.online/fullchain.pem;
 
     client_max_body_size 50M;
 
@@ -77,9 +77,9 @@ server {
     server_name backend.historycode.online;
     server_tokens off;
 
-    ssl_certificate         /etc/nginx/ssl/live/backend.historycode.online/fullchain.pem;
-    ssl_certificate_key     /etc/nginx/ssl/live/backend.historycode.online/privkey.pem;
-    ssl_trusted_certificate /etc/nginx/ssl/live/backend.historycode.online/fullchain.pem;
+    ssl_certificate         /etc/letsencrypt/live/backend.historycode.online/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/backend.historycode.online/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/backend.historycode.online/fullchain.pem;
 
     client_max_body_size 50M;
 
