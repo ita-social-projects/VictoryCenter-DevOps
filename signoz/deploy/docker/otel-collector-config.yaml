@@ -21,6 +21,17 @@ receivers:
     collection_interval: 10s
     timeout: 5s
     api_version: "1.51"
+  
+  filelog:
+    include: [/var/lib/docker/containers/*/*-json.log]
+    poll_interval: 200ms
+    start_at: end
+    include_file_name: false
+    include_file_path: false
+    operators:
+      - id: container-parser
+        type: container
+        format: docker
 
 processors:
   batch:
@@ -100,7 +111,7 @@ service:
       processors: [batch]
       exporters: [signozclickhousemetrics]
     logs:
-      receivers: [otlp]
+      receivers: [otlp, filelog]
       processors: [batch]
       exporters: [clickhouselogsexporter]
 
