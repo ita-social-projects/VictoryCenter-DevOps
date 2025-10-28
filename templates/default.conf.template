@@ -37,6 +37,43 @@ server {
     }
 }
 
+server {
+    listen 8080 ssl http2;
+    listen [::]:8080 ssl http2;
+
+    server_name historycode.online;
+    server_tokens off;
+
+    ssl_certificate         /etc/letsencrypt/live/historycode.online/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/historycode.online/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/historycode.online/fullchain.pem;
+
+    client_max_body_size 50M;
+
+    # Заголовки безпеки
+    add_header X-Frame-Options DENY always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+
+    location / {
+        proxy_pass http://signoz:8080;
+        proxy_set_header Host                 $host;
+        proxy_set_header X-Real-IP            $remote_addr;
+        proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto    $scheme;
+        
+        # Для WebSocket з'єднань
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        
+        # Таймаути
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+
 # -------------------------------
 # HTTPS: Frontend (SPA)
 # -------------------------------
@@ -57,40 +94,6 @@ server {
     add_header X-Frame-Options DENY always;
     add_header X-Content-Type-Options nosniff always;
     add_header Referrer-Policy strict-origin-when-cross-origin always;
-
-    location /monitoring/ {
-        proxy_pass http://signoz:8080/;   
-        proxy_set_header Host              $host;
-        proxy_set_header X-Real-IP         $remote_addr;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-    location ~ ^/(static/|assets/|css/|js/|favicon\.ico|manifest\.json|runtime|main\..*\.js)$ {
-        proxy_pass http://signoz:8080$request_uri;
-        proxy_set_header Host              $host;
-        proxy_set_header X-Real-IP         $remote_addr;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-
-# Роути SPA та API SigNoz, які теж ідуть з кореня
-    location ~ ^/(logs|traces|exceptions|metrics|alerts|dashboards|settings|api)(/|$) {
-        proxy_pass http://signoz:8080$request_uri;
-        proxy_set_header Host              $host;
-        proxy_set_header X-Real-IP         $remote_addr;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-
 
     location / {
         proxy_pass http://frontend;
@@ -116,7 +119,6 @@ server {
     ssl_trusted_certificate /etc/letsencrypt/live/backend.historycode.online/fullchain.pem;
 
     client_max_body_size 50M;
-    
 
     # --- Swagger UI (публічно)
     # (якщо потрібно обмежити доступ — раскоментуй 2 рядки нижче і додай .htpasswd)
