@@ -38,8 +38,8 @@ server {
 }
 
 server {
-    listen 8080 ssl http2;
-    listen [::]:8080 ssl http2;
+    listen 8081 ssl http2;
+    listen [::]:8081 ssl http2;
 
     server_name historycode.online;
     server_tokens off;
