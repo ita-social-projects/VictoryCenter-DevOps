@@ -2,6 +2,7 @@ version: "3"
 x-common: &common
   networks:
     - signoz-net
+    - victorycenter-client_default
   restart: unless-stopped
   logging:
     options:
@@ -123,7 +124,7 @@ services:
       - ../common/dashboards:/root/config/dashboards
       - sqlite:/var/lib/signoz/
     environment:
-      - SIGNOZ_WEB_BASE_URL=/monitoring
+      - SIGNOZ_WEB_BASE_URL=/signoz
       - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
       - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://clickhouse:9000
       - SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
@@ -196,6 +197,9 @@ services:
 networks:
   signoz-net:
     name: signoz-net
+  victorycenter-client_default:
+    name: victorycenter-client_default
+    external: true
 volumes:
   clickhouse:
     name: signoz-clickhouse
