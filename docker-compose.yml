@@ -20,16 +20,16 @@ services:
       - /certbot/conf:/etc/letsencrypt/:ro
   frontend:
     restart: always
-    image: victorycenterua/${DOCKER_TAG_FRONTEND}
+    image: victorycenterua/client:release-${DOCKER_TAG_FRONTEND}
     pull_policy: always
     container_name: frontend
     expose:
       - "80"
     environment:
-      REACT_APP_BACKEND_URL: "https://backend.historycode.online/api"
+      REACT_APP_BACKEND_URL: "https://backend.victorycenter.online/api"
   backend:
     restart: always
-    image: victorycenterua/${DOCKER_TAG_BACKEND}
+    image: victorycenterua/backend:release-${DOCKER_TAG_BACKEND}
     container_name: backend
     pull_policy: always
     volumes:
