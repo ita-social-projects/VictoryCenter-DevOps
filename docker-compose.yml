@@ -27,6 +27,7 @@ services:
       - "80"
     environment:
       REACT_APP_BACKEND_URL: "https://backend.victorycenter.online/api"
+      REACT_APP_CF_TURNSTILE_SITE_KEY: ${REACT_APP_CF_TURNSTILE_SITE_KEY}
   backend:
     restart: always
     image: victorycenterua/backend:${DOCKER_TAG_BACKEND}
