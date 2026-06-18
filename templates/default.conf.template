@@ -87,9 +87,9 @@ server {
     server_name backend.victorycenter.online;
     server_tokens off;
 
-    ssl_certificate         /etc/letsencrypt/live/backend.victorycenter.online/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/live/backend.victorycenter.online/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/backend.victorycenter.online/fullchain.pem;
+    ssl_certificate         /etc/letsencrypt/live/victorycenter.online/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/victorycenter.online/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/victorycenter.online/fullchain.pem;
 
     client_max_body_size 50M;
 
@@ -128,9 +128,9 @@ server {
     server_name embroidery-shop-lviv.pp.ua www.embroidery-shop-lviv.pp.ua;
     server_tokens off;
 
-    ssl_certificate         /etc/letsencrypt/live/embroidery-shop-lviv.pp.ua/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/live/embroidery-shop-lviv.pp.ua/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/embroidery-shop-lviv.pp.ua/fullchain.pem;
+    ssl_certificate         /etc/letsencrypt/live/victorycenter.online/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/victorycenter.online/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/victorycenter.online/fullchain.pem;
 
     client_max_body_size 50M;
 
