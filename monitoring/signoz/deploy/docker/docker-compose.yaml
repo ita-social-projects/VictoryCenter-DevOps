@@ -2,7 +2,7 @@ version: "3"
 x-common: &common
   networks:
     - signoz-net
-    - victorycenter-client_default
+    - main-network
   restart: unless-stopped
   logging:
     options:
@@ -198,7 +198,7 @@ networks:
   signoz-net:
     name: signoz-net
   victorycenter-client_default:
-    name: victorycenter-client_default
+    name: main-network
     external: true
 volumes:
   clickhouse:
