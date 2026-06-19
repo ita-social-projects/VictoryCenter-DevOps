@@ -66,9 +66,5 @@ services:
 volumes:
   backend:
 networks:
-  backend:
-    external: true
-    name: main-network
-  frontend:
-    external: true
+  main-network:
     name: main-network
