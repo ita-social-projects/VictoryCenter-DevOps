@@ -21,6 +21,8 @@ services:
   frontend:
     restart: always
     image: victorycenterua/client:${DOCKER_TAG_FRONTEND}
+    networks:
+      - main-network
     pull_policy: always
     container_name: frontend
     expose:
@@ -31,6 +33,8 @@ services:
   backend:
     restart: always
     image: victorycenterua/backend:${DOCKER_TAG_BACKEND}
+    networks:
+      - main-network
     container_name: backend
     pull_policy: always
     volumes:
@@ -64,7 +68,7 @@ volumes:
 networks:
   backend:
     external: true
-    name: backend
+    name: main-network
   frontend:
     external: true
-    name: frontend
+    name: main-network
