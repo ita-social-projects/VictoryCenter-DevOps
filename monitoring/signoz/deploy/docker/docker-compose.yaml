@@ -166,6 +166,7 @@ services:
       - HOST_PROC=/hostfs/proc
       - HOST_SYS=/hostfs/sys
       - HOST_ROOT=/hostfs
+      - DOCKER_API_VERSION=1.40
     ports:
       # - "1777:1777"     # pprof extension
       - "4317:4317" # OTLP gRPC receiver
